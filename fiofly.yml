@@ -1,0 +1,82 @@
+conf:
+  fios_logs: ./fiologs
+  graphs_from_logs: ./graphlogs
+  
+
+jobs_fios:
+- bw_read:
+    direct: 1
+    ioengine: libaio
+    iodepth:
+      - 32
+      - 64
+    numjobs: 1
+    size: 20G
+    bs: 512k
+    rw: read
+    runtime: 20
+
+- bw_write:
+    direct: 1
+    ioengine: libaio
+    iodepth: 64
+    numjobs: 1
+    size: 20G
+    bs: 512k
+    rw:
+      - write
+      - read
+    runtime: 20
+    
+- iops_read:
+    direct: 1
+    ioengine: libaio
+    iodepth: 1
+    numjobs: 24
+    size: 1G
+    bs: 4k
+    rw: randread
+    runtime: 20
+    
+- iops_write:
+    direct: 1
+    ioengine: libaio
+    iodepth: 1
+    numjobs: 24
+    size: 1G
+    bs: 4k
+    rw: randwrite
+    runtime: 20
+
+tests:
+- nvme0_960evo:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/nvme0_960evo
+    custom:
+      bw_write:
+        bs: 256k
+- nvme1_960pro:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/nvme1_960pro
+- nvmes_raid0:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/nvmes_raid0
+- wb:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/wb
+- drbd_nvmes_raid0:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/drbd_nvmes_raid0 
+- drbd_wb:
+    graphs: A
+    do_fio: true
+    dir_to_fio: /mnt/drbd_wb
+- nfs10g_nvmes_raid0:
+    graphs: B
+- nfs10g_wb:
+    graphs: B
