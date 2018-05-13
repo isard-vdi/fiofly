@@ -41,5 +41,11 @@ def get_yaml_file_config(args):
         return read_yaml_file(system_yaml_file)
 
     else:
-        print("You didn't provided any YAML file. You can create it where you want and pass it with the '-y' parameter, create it for your user in '~/.config/fiofly/fiofly.yml' or for all the users in '/etc/fiofly/fiofly.yml'")
+        print("""You didn't provided any YAML configuration file. You have the following options:
+
+- Create it were you want and pass it with the '\033[1m-y\033[0m' parameter (\033[1mfiofly -y <path/to/the_file.yml>\033[0m)
+- Create it just for your user in '\033[1m~/.config/fiofly/fiofly.yml\033[0m' (\033[1mrecommended\033[0m)
+- Create it for all the users in '\033[1m/etc/fiofly/fiofly.yml\033[0m'
+
+The program is just going to read one file. The previous list was in the order that the program is going to read them""")
         sys.exit(1)
