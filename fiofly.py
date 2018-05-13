@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
 # Albeto Larraz Dalmases
+# Néfix Estrada Campañá
 # IsardVDI Project
 # Escola del Treball de Barcelona
 
@@ -8,15 +9,15 @@
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 
-import yaml
 import os
 import argparse
 import numpy as np
 from pprint import pprint
 from matplotlib.font_manager import FontProperties
 
+# Helpers imports
+from helpers import files_helpers
 
-DEFAULT_YAML_CONF = './fiofly.yml'
 
 OPTIONS_FIO = '--output-format=json,normal'
 FILENAME_TEST = 'fio_test'
@@ -66,18 +67,13 @@ def create_plot(x0,x1,title0,title1,title_y):
     fig.subplots_adjust(wspace=0.5)
     return
 
+
 class FioFly(object):
-    def __init__(self, path_config_yaml):
-        f = open(path_config_yaml)
-        self.conf = 0
-        self.conf = yaml.load(f.read())
+    def __init__(self, args):
+        self.conf = files_helpers.get_yaml_file_config(args)
         self.jobs_fios = self.conf['jobs_fios']
 
-        f.close()
-
     def create_fios_tests(self):
-
-
         tests = self.conf['tests']
         all_cmds=[]
         all_cmds.append('echo "### {} #######"'.format('create dir to fio logs'))
@@ -115,7 +111,6 @@ class FioFly(object):
             cmds.append(self.cmd_fio(title_fio, d_jobs_fio, path, title))
 
         return cmds
-
 
     def cmd_fio(self,title_fio,d_jobs_fio,dir_to_fio,title):
 
@@ -296,41 +291,33 @@ def main():
     parser = set_arguments()
     try:
         args = parser.parse_args()
+    
     except OSError:
         parser.print_help()
         sys.exit(1)
 
+    fiofly = FioFly(args)
 
-
-    settings = vars(args)
-
-    if settings["yaml_file_conf"]:
-        fiofly = FioFly(settings.y)
-    else:
-        fiofly = FioFly(DEFAULT_YAML_CONF)
-
-    if settings["run_commands"]:
+    if args.run_commands:
         fiofly.run_fios_tests()
 
-    if settings["fio_commands"]:
+    if args.fio_commands:
         fiofly.print_fios()
 
-    if settings['table_results']:
+    if args.table_results:
         fiofly.print_stats()
 
-    if settings['show_plots']:
+    if args.show_plots:
         fiofly.create_plots()
         fiofly.show_plots()
 
-    if settings['plots_png_file']:
+    if args.plots_png_file:
         fiofly.create_plots(png=True)
 
-
-
-    if settings['info_tests']:
+    if args.info_tests:
         fiofly.print_test_dirs()
 
-    if not any(settings.values()):
+    if not any(vars(args).values()):
         parser.print_help()
 
 
