@@ -17,6 +17,7 @@ from matplotlib.font_manager import FontProperties
 
 # Helpers imports
 from helpers import files_helpers
+from helpers import syntax_checkers
 
 
 OPTIONS_FIO = '--output-format=json,normal'
@@ -71,6 +72,7 @@ def create_plot(x0,x1,title0,title1,title_y):
 class FioFly(object):
     def __init__(self, args):
         self.conf = files_helpers.get_yaml_file_config(args)
+        syntax_checkers.check_syntax(self.conf)
         self.jobs_fios = self.conf['jobs_fios']
 
     def create_fios_tests(self):
