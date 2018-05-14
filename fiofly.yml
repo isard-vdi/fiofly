@@ -53,9 +53,6 @@ tests:
     graphs: A
     do_fio: true
     dir_to_fio: /mnt/nvme0_960evo
-    custom:
-      bw_write:
-        bs: 256k
 - nvme1_960pro:
     graphs: A
     do_fio: true
@@ -76,7 +73,3 @@ tests:
     graphs: A
     do_fio: true
     dir_to_fio: /mnt/drbd_wb
-- nfs10g_nvmes_raid0:
-    graphs: B
-- nfs10g_wb:
-    graphs: B
